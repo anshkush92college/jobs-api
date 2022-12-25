@@ -1,13 +1,11 @@
 const { StatusCodes } = require('http-status-codes');
-const bcrypt = require('bcryptjs');
-
 const { BadRequestError } = require('../errors');
 const User = require('../models/user');
 
-const SALT_ROUNDS = process.env.SALT_ROUNDS;
-
 const register = async (req, res) => {
   try {
+    const { name, email, password } = req.body;
+
     // Checking if all the required fields are provided, and throwing an error if not
     if (!name || !email || !password) {
       throw new BadRequestError('Please provide all the required fields');
@@ -21,7 +19,7 @@ const register = async (req, res) => {
       .status(StatusCodes.CREATED)
       .json({ message: '/auth/register route', user });
   } catch (error) {
-    console.log(error.message);
+    console.log(error.message, error);
     res.status(404).json({ message: error.message });
   }
 };

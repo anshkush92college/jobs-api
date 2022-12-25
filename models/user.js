@@ -25,19 +25,18 @@ const userSchema = new Schema({
   },
 });
 
-const User = model('User', userSchema);
-
 // This function will be called before saving the user to the database
 // Hashing the password before saving the user to the database ---> Middleware
 userSchema.pre('save', async function (next) {
   // Generating a salt
-  const salt = bcryptjs.genSalt(process.env.SALT_ROUNDS);
+  const salt = await bcryptjs.genSalt(Number(process.env.SALT_ROUNDS));
   console.log('🚀 ~ file: user.js:35 ~ salt', salt);
   // Hashing the password with the generated salt
-  this.password = bcryptjs.hash(this.password, salt);
-  console.log('🚀 ~ file: user.js:38 ~ password', password);
+  this.password = await bcryptjs.hash(this.password, salt);
 
   next();
 });
+
+const User = model('User', userSchema);
 
 module.exports = User;
