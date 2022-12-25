@@ -35,6 +35,13 @@ userSchema.pre('save', async function () {
   this.password = await bcryptjs.hash(this.password, salt);
 });
 
+// Creating the function to get the id and name of the user
+userSchema.methods.getPublicFields = function () {
+  // this -----> refers to the user object
+  const { _id, name } = this;
+  return { _id, name };
+};
+
 const User = model('User', userSchema);
 
 module.exports = User;
