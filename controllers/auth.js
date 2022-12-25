@@ -18,10 +18,10 @@ const register = async (req, res) => {
     const salt = await bcrypt.genSalt(Number(SALT_ROUNDS));
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const tempUser = { name, email, password };
+    const tempUser = { name, email, password: hashedPassword };
 
     // Creating a user in the MongoDB database
-    const user = await User.create({ ...req.body });
+    const user = await User.create({ ...tempUser });
 
     // Sending a response to the client
     res
