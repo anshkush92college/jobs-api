@@ -1,5 +1,5 @@
 const { StatusCodes } = require('http-status-codes');
-const { BadRequestError } = require('../errors');
+const { BadRequestError, UnauthenticatedError } = require('../errors');
 
 const User = require('../models/user');
 
@@ -32,7 +32,27 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
   try {
-    res.status(200).json({ message: '/auth/login route', data: req.body });
+    const { email, password } = req.body;
+
+    // Checking if all the required fields are provided, and throwing an error if not
+    if (!email || !password) {
+      throw new BadRequestError('Please provide all the required fields');
+    }
+
+    // Finding the user in the database by email
+    const user = await User.findOne({ email });
+
+    // Checking if the user exists in the database, and throwing an error if not
+    if (!user) {
+      throw new UnauthenticatedError('Invalid Credentials');
+    }
+
+    // Creating the JWT token for the user when logging in
+    const jwtToken = user.createJWT();
+
+    res
+      .status(StatusCodes.OK)
+      .json({ message: '/auth/login route', user, jwtToken });
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
