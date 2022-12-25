@@ -8,20 +8,13 @@ const SALT_ROUNDS = process.env.SALT_ROUNDS;
 
 const register = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
-
     // Checking if all the required fields are provided, and throwing an error if not
     if (!name || !email || !password) {
       throw new BadRequestError('Please provide all the required fields');
     }
 
-    const salt = await bcrypt.genSalt(Number(SALT_ROUNDS));
-    const hashedPassword = await bcrypt.hash(password, salt);
-
-    const tempUser = { name, email, password: hashedPassword };
-
     // Creating a user in the MongoDB database
-    const user = await User.create({ ...tempUser });
+    const user = await User.create({ ...req.body });
 
     // Sending a response to the client
     res
