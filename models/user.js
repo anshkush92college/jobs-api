@@ -1,5 +1,5 @@
 const { model, Schema } = require('mongoose');
-const bcryptjs = require('bcryptjs');
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const userSchema = new Schema({
@@ -30,9 +30,9 @@ const userSchema = new Schema({
 // Hashing the password before saving the user to the database ---> Middleware
 userSchema.pre('save', async function () {
   // Generating a salt
-  const salt = await bcryptjs.genSalt(Number(process.env.SALT_ROUNDS));
+  const salt = await bcrypt.genSalt(Number(process.env.SALT_ROUNDS));
   // Hashing the password with the generated salt
-  this.password = await bcryptjs.hash(this.password, salt);
+  this.password = await bcrypt.hash(this.password, salt);
 });
 
 // Creating the function to CREATE a JWT Token for the user
@@ -42,6 +42,12 @@ userSchema.methods.createJWT = function () {
   return jwt.sign({ id: _id, name, email }, process.env.JWT_SECRET, {
     expiresIn: '1d',
   });
+};
+
+// Creating the function to COMPARE the PASSWORD for the user
+userSchema.methods.comparePassword = async function (enteredPassword) {
+  const isMatch = await bcrypt.compare(enteredPassword, this.password);
+  return isMatch;
 };
 
 const User = model('User', userSchema);
