@@ -33,8 +33,6 @@ userSchema.pre('save', async function (next) {
   console.log('🚀 ~ file: user.js:35 ~ salt', salt);
   // Hashing the password with the generated salt
   this.password = await bcryptjs.hash(this.password, salt);
-
-  next();
 });
 
 const User = model('User', userSchema);
