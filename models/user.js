@@ -27,7 +27,7 @@ const userSchema = new Schema({
 
 // This function will be called before saving the user to the database
 // Hashing the password before saving the user to the database ---> Middleware
-userSchema.pre('save', async function (next) {
+userSchema.pre('save', async function () {
   // Generating a salt
   const salt = await bcryptjs.genSalt(Number(process.env.SALT_ROUNDS));
   console.log('🚀 ~ file: user.js:35 ~ salt', salt);
