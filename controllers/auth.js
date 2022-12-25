@@ -44,7 +44,14 @@ const login = async (req, res) => {
 
     // Checking if the user exists in the database, and throwing an error if not
     if (!user) {
-      throw new UnauthenticatedError('Invalid Credentials');
+      throw new UnauthenticatedError('User doesnt exists');
+    }
+
+    // Checking if the password provided by the user matches the password in the database, and throwing an error if not
+    const isPasswordMatched = await user.comparePassword(password);
+
+    if (!isPasswordMatched) {
+      throw new UnauthenticatedError('Invalid Password');
     }
 
     // Creating the JWT token for the user when logging in
