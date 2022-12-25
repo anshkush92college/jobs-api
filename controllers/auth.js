@@ -1,6 +1,10 @@
 const { StatusCodes } = require('http-status-codes');
+const bcrypt = require('bcryptjs');
+
 const { BadRequestError } = require('../errors');
 const User = require('../models/user');
+
+const SALT_ROUNDS = process.env.SALT_ROUNDS;
 
 const register = async (req, res) => {
   try {
@@ -10,6 +14,11 @@ const register = async (req, res) => {
     if (!name || !email || !password) {
       throw new BadRequestError('Please provide all the required fields');
     }
+
+    const salt = await bcrypt.genSalt(Number(SALT_ROUNDS));
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    const tempUser = { name, email, password };
 
     // Creating a user in the MongoDB database
     const user = await User.create({ ...req.body });
