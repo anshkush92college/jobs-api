@@ -14,6 +14,7 @@ const jobRoutes = require('./routes/job');
 const db = require('./configs/db');
 
 /* Loading the middlewares */
+const authMiddleware = require('./middlewares/authentication');
 const notFoundMiddleware = require('./middlewares/not-found');
 const errorHandlerMiddleware = require('./middlewares/error-handler');
 
@@ -30,8 +31,9 @@ app.use(express.urlencoded({ extended: true }));
 /* Using the routes */
 app.use(generalRoutes);
 app.use('/auth', authRoutes);
-app.use(jobRoutes);
+app.use(authMiddleware, jobRoutes);
 
+/* Using the custom middlewares */
 // app.use(notFoundMiddleware);
 // app.use(errorHandlerMiddleware);
 
