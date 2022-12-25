@@ -1,21 +1,41 @@
 const getAllJobs = async (req, res) => {
-  console.log("Get all jobs");
+  try {
+    res.status(200).json({ message: '/jobs route' });
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
 };
 
 const getJob = async (req, res) => {
-  console.log("Get a single job with particular id");
+  try {
+    res.status(200).json({ message: '/job/:id route' });
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
 };
 
 const createJob = async (req, res) => {
-  console.log("Create a job");
+  try {
+    res.status(200).json({ message: '/job/create route' });
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
 };
 
 const updateJob = async (req, res) => {
-  console.log("Update a job");
+  try {
+    res.status(200).json({ message: '/job/edit/:id route' });
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
 };
 
 const deleteJob = async (req, res) => {
-  console.log("Delete a job");
+  try {
+    res.status(200).json({ message: '/job/delete/:id route' });
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
 };
 
 module.exports = { getAllJobs, getJob, createJob, updateJob, deleteJob };
