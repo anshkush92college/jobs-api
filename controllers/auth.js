@@ -1,6 +1,9 @@
 const { StatusCodes } = require('http-status-codes');
 const { BadRequestError } = require('../errors');
+const jwt = require('jsonwebtoken');
+
 const User = require('../models/user');
+const JWT_SECRET = process.env.JWT_SECRET;
 
 const register = async (req, res) => {
   try {
@@ -14,10 +17,17 @@ const register = async (req, res) => {
     // Creating a user in the MongoDB database
     const user = await User.create({ ...req.body });
 
+    // Creating the JWT Token for the user on registration
+    const token = jwt.sign(
+      { id: user._id, name: user.name, email: user.email },
+      JWT_SECRET,
+      { expiresIn: '1d' }
+    );
+
     // Sending a response to the client
     res
       .status(StatusCodes.CREATED)
-      .json({ message: '/auth/register route', user });
+      .json({ message: '/auth/register route', user, token });
   } catch (error) {
     console.log(error.message, error);
     res.status(404).json({ message: error.message });
