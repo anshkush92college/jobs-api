@@ -17,20 +17,14 @@ const register = async (req, res) => {
     // Creating a user in the MongoDB database
     const user = await User.create({ ...req.body });
 
-    // Creating the JWT Token for the user on registration
-    // Don't store the sensitive information in the token, as it gets stored on the client side
-    const token = jwt.sign(
-      { id: user._id, name: user.name, email: user.email },
-      JWT_SECRET,
-      { expiresIn: '1d' }
-    );
+    // Creating a JWT Token for the user from the MONGO DB methods we created ---> createJWT()
+    const jwtToken = user.createJWT();
 
     // Sending a response to the client
     res.status(StatusCodes.CREATED).json({
       message: '/auth/register route',
       user,
-      token,
-      mongodbData: user.getPublicFields(),
+      jwtToken,
     });
   } catch (error) {
     console.log(error.message, error);

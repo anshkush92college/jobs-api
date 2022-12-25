@@ -1,5 +1,6 @@
 const { model, Schema } = require('mongoose');
 const bcryptjs = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const userSchema = new Schema({
   name: {
@@ -30,16 +31,17 @@ const userSchema = new Schema({
 userSchema.pre('save', async function () {
   // Generating a salt
   const salt = await bcryptjs.genSalt(Number(process.env.SALT_ROUNDS));
-  console.log('🚀 ~ file: user.js:35 ~ salt', salt);
   // Hashing the password with the generated salt
   this.password = await bcryptjs.hash(this.password, salt);
 });
 
-// Creating the function to get the id and name of the user
-userSchema.methods.getPublicFields = function () {
+// Creating the function to CREATE a JWT Token for the user
+userSchema.methods.createJWT = function () {
   // this -----> refers to the user object
-  const { _id, name } = this;
-  return { _id, name };
+  const { _id, name, email } = this;
+  return jwt.sign({ id: _id, name, email }, process.env.JWT_SECRET, {
+    expiresIn: '1d',
+  });
 };
 
 const User = model('User', userSchema);
