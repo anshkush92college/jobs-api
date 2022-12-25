@@ -2,21 +2,22 @@
 
 /* Loading all the relevant dependencies */
 const express = require('express');
-
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 require('dotenv').config();
 
+/* IMPORTS */
+const generalRoutes = require('./routes/general');
+const authRoutes = require('./routes/auth');
+const jobRoutes = require('./routes/job');
+const db = require('./configs/db');
+
 /* Loading the middlewares */
 const notFoundMiddleware = require('./middlewares/not-found');
 const errorHandlerMiddleware = require('./middlewares/error-handler');
 
-/* ROUTES ---> For the api */
-const generalRoutes = require('./routes/general');
-const authRoutes = require('./routes/auth');
-const jobRoutes = require('./routes/job');
-
+/* CONFIGURATION */
 const app = express();
 
 /* Using the required middlewares */
