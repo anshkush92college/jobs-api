@@ -1,9 +1,7 @@
 const { StatusCodes } = require('http-status-codes');
 const { BadRequestError } = require('../errors');
-const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
-const JWT_SECRET = process.env.JWT_SECRET;
 
 const register = async (req, res) => {
   try {
