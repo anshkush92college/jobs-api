@@ -9,7 +9,9 @@ const getAllJobs = async (req, res) => {
     // Finding all jobs for the logged in user
     const jobs = await Job.find({ createdBy: req.user.id }).sort('createdAt');
 
-    res.status(StatusCodes.OK).json({ message: '/jobs route', jobs });
+    res
+      .status(StatusCodes.OK)
+      .json({ message: '/jobs route', count: jobs.length, jobs });
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
