@@ -41,7 +41,7 @@ app.use(morgan('dev'));
 /* Using the routes */
 app.use(generalRoutes);
 app.use('/auth', authRoutes);
-app.use(authMiddleware, jobRoutes);
+app.use('/jobs', authMiddleware, jobRoutes);
 
 /* Using the custom middlewares */
 app.use(notFoundMiddleware);
