@@ -2,6 +2,7 @@ const { StatusCodes } = require('http-status-codes');
 
 const { BadRequestError, NotFoundError } = require('../errors');
 const Job = require('../models/job');
+const isValidObjectId = require('../utils/isValidObjectId');
 
 const getAllJobs = async (req, res) => {
   try {
@@ -16,6 +17,11 @@ const getAllJobs = async (req, res) => {
 
 const getJob = async (req, res) => {
   try {
+    // Checking if the id is valid
+    if (!isValidObjectId(req.params.id)) {
+      throw new BadRequestError('Invalid job id');
+    }
+
     // Finding a job of particular id by the logged in user
     const job = await Job.findOne({
       createdBy: req.user.id,
@@ -23,7 +29,7 @@ const getJob = async (req, res) => {
     });
 
     if (!job) {
-      throw new NotFoundError('Job not found with id ' + req.params.id);
+      throw new NotFoundError(`Job not found with id  ${req.params.id}`);
     }
 
     res.status(200).json({ message: '/job/:id route', job });
@@ -45,6 +51,11 @@ const createJob = async (req, res) => {
 
 const updateJob = async (req, res) => {
   try {
+    // Checking if the id is valid
+    if (!isValidObjectId(req.params.id)) {
+      throw new BadRequestError('Invalid job id');
+    }
+
     // Getting the new job details
     const { company, position, status } = req.body;
 
@@ -63,7 +74,7 @@ const updateJob = async (req, res) => {
     );
 
     if (!job) {
-      throw new NotFoundError('Job not found with id ' + req.params.id);
+      throw new NotFoundError(`Job not found with id  ${req.params.id}`);
     }
 
     res.status(200).json({ message: '/job/edit/:id route', updatedJob: job });
@@ -74,6 +85,11 @@ const updateJob = async (req, res) => {
 
 const deleteJob = async (req, res) => {
   try {
+    // Checking if the id is valid
+    if (!isValidObjectId(req.params.id)) {
+      throw new BadRequestError('Invalid job id');
+    }
+
     res.status(200).json({ message: '/job/delete/:id route' });
   } catch (error) {
     res.status(404).json({ message: error.message });
