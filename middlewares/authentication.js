@@ -26,8 +26,12 @@ const authMiddleware = async (req, res, next) => {
     if (!user) {
       throw new UnauthenticatedError('User not found');
     } else {
-      // Adding the user to the request object
-      req.user = user;
+      // Adding the user (JWT Token) to the request object
+      req.user = {
+        id: decodedToken.id,
+        email: decodedToken.email,
+        name: decodedToken.name,
+      };
     }
   } catch (error) {
     throw new UnauthenticatedError('Invalid Authorization Header / JWT Token');
