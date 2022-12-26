@@ -28,11 +28,7 @@ const getJob = async (req, res) => {
       _id: req.params.id,
     });
 
-    if (!job) {
-      throw new NotFoundError(`Job not found with id  ${req.params.id}`);
-    }
-
-    res.status(200).json({ message: '/job/:id route', job });
+    res.status(StatusCodes.OK).json({ message: '/job/:id route', job });
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
@@ -73,11 +69,9 @@ const updateJob = async (req, res) => {
       { new: true, runValidators: true }
     );
 
-    if (!job) {
-      throw new NotFoundError(`Job not found with id  ${req.params.id}`);
-    }
-
-    res.status(200).json({ message: '/job/edit/:id route', updatedJob: job });
+    res
+      .status(StatusCodes.OK)
+      .json({ message: '/job/edit/:id route', updatedJob: job });
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
@@ -90,7 +84,15 @@ const deleteJob = async (req, res) => {
       throw new BadRequestError('Invalid job id');
     }
 
-    res.status(200).json({ message: '/job/delete/:id route' });
+    // Deleting a job of particular id by the logged in user
+    const job = await Job.findByIdAndRemove({
+      _id: req.params.id,
+      createdBy: req.user.id,
+    });
+
+    res
+      .status(StatusCodes.OK)
+      .json({ message: '/job/delete/:id route', removedJob: job });
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
