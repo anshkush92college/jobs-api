@@ -28,6 +28,10 @@ const getJob = async (req, res) => {
       _id: req.params.id,
     });
 
+    if (!job) {
+      throw new NotFoundError('Job not found');
+    }
+
     res.status(StatusCodes.OK).json({ message: '/job/:id route', job });
   } catch (error) {
     res.status(404).json({ message: error.message });
@@ -69,6 +73,10 @@ const updateJob = async (req, res) => {
       { new: true, runValidators: true }
     );
 
+    if (!job) {
+      throw new NotFoundError('Job not found');
+    }
+
     res
       .status(StatusCodes.OK)
       .json({ message: '/job/edit/:id route', updatedJob: job });
@@ -89,6 +97,10 @@ const deleteJob = async (req, res) => {
       _id: req.params.id,
       createdBy: req.user.id,
     });
+
+    if (!job) {
+      throw new NotFoundError('Job not found');
+    }
 
     res
       .status(StatusCodes.OK)
