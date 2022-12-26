@@ -5,6 +5,8 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
+const xss = require('xss-clean');
+const rateLimiter = require('express-rate-limit');
 require('dotenv').config();
 
 /* IMPORTS */
@@ -22,11 +24,18 @@ const errorHandlerMiddleware = require('./middlewares/error-handler');
 const app = express();
 
 /* Using the required middlewares */
-app.use(cors());
-app.use(helmet());
-app.use(morgan('dev'));
+app.use(
+  rateLimiter({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // limit each IP to 100 requests per windowMs
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cors());
+app.use(xss());
+app.use(helmet());
+app.use(morgan('dev'));
 
 /* Using the routes */
 app.use(generalRoutes);
@@ -34,8 +43,8 @@ app.use('/auth', authRoutes);
 app.use(authMiddleware, jobRoutes);
 
 /* Using the custom middlewares */
-// app.use(notFoundMiddleware);
-// app.use(errorHandlerMiddleware);
+app.use(notFoundMiddleware);
+app.use(errorHandlerMiddleware);
 
 /* Running the server */
 const PORT = process.env.PORT || 5000;
