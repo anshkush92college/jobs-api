@@ -1,7 +1,5 @@
 const { model, Schema, mongoose } = require('mongoose');
 
-const User = require('./user');
-
 const jobSchema = new Schema(
   {
     company: {

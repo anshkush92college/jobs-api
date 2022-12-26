@@ -21,6 +21,14 @@ const authMiddleware = async (req, res, next) => {
 
     // Finding the user in the database by the id in the JWT Token
     const user = await User.findById(decodedToken.id);
+
+    // Checking if the user is present or not
+    if (!user) {
+      throw new UnauthenticatedError('User not found');
+    } else {
+      // Adding the user to the request object
+      req.user = user;
+    }
   } catch (error) {
     throw new UnauthenticatedError('Invalid Authorization Header / JWT Token');
   }
