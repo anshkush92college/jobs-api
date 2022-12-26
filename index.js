@@ -1,5 +1,10 @@
 /* ENTRYPOINT */
 
+/* Swagger UI dependencies */
+const swaggerUI = require('swagger-ui-express');
+const YAML = require('yamljs');
+const swaggerDocument = YAML.load('./swagger.yaml');
+
 /* Loading all the relevant dependencies */
 const express = require('express');
 const cors = require('cors');
@@ -22,6 +27,8 @@ const errorHandlerMiddleware = require('./middlewares/error-handler');
 
 /* CONFIGURATION */
 const app = express();
+
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 
 /* Using the required middlewares */
 app.set('trust proxy', 1);

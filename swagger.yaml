@@ -1,0 +1,274 @@
+openapi: 3.0.0
+info:
+  title: Jobs-API
+  contact: {}
+  version: '1.0'
+servers:
+  - url: https://jobs-api-ansh.up.railway.app/
+    variables: {}
+paths:
+  /auth/register:
+    post:
+      tags:
+        - Auth
+      summary: Register the User
+      operationId: RegistertheUser
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/RegistertheUserRequest'
+                - example:
+                    name: Ansh Singh
+                    email: ansh@gmail.com
+                    password: anshsingh
+            example:
+              name: Ansh Singh
+              email: ansh@gmail.com
+              password: anshsingh
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security: []
+      servers:
+        - url: https://jobs-api-ansh.up.railway.app/
+          variables: {}
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: Login the User
+      operationId: LogintheUser
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/LogintheUserRequest'
+                - example:
+                    email: ansh@gmail.com
+                    password: anshsingh
+            example:
+              email: ansh@gmail.com
+              password: anshsingh
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security: []
+  /jobs/create:
+    post:
+      tags:
+        - Jobs
+      summary: Create a job
+      operationId: Createajob
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/CreateajobRequest'
+                - example:
+                    company: Railway App
+                    position: Back-End-Developer
+                    status: rejected
+            example:
+              company: Railway App
+              position: Back-End-Developer
+              status: rejected
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+        - bearer: []
+  /jobs:
+    get:
+      tags:
+        - Jobs
+      summary: Get all the jobs
+      operationId: Getallthejobs
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+        - bearer: []
+  /jobs/{id}:
+    get:
+      tags:
+        - Jobs
+      summary: Get single job
+      operationId: Getsinglejob
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          required: true
+          style: simple
+          schema:
+            type: string
+            example: 63a98996f0d63fb4832f976a
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+        - bearer: []
+  /jobs/edit/{id}:
+    patch:
+      tags:
+        - Jobs
+      summary: Update a job
+      operationId: Updateajob
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          required: true
+          style: simple
+          schema:
+            type: string
+            example: 63a98996f0d63fb4832f976a
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/UpdateajobRequest'
+                - example:
+                    company: Netlify
+                    position: Front-end Developer
+                    status: interview
+            example:
+              company: Netlify
+              position: Front-end Developer
+              status: interview
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+        - bearer: []
+  /jobs/delete/{id}:
+    delete:
+      tags:
+        - Jobs
+      summary: Delete a job
+      operationId: Deleteajob
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          required: true
+          style: simple
+          schema:
+            type: string
+            example: 63a988586b239de269900481
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+        - bearer: []
+components:
+  schemas:
+    RegistertheUserRequest:
+      title: Register the User Request
+      required:
+        - name
+        - email
+        - password
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+      example:
+        name: Ansh Singh
+        email: ansh@gmail.com
+        password: anshsingh
+    LogintheUserRequest:
+      title: Login the User Request
+      required:
+        - email
+        - password
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      example:
+        email: ansh@gmail.com
+        password: anshsingh
+    CreateajobRequest:
+      title: Create a job Request
+      required:
+        - company
+        - position
+        - status
+      type: object
+      properties:
+        company:
+          type: string
+        position:
+          type: string
+        status:
+          type: string
+      example:
+        company: Railway App
+        position: Back-End-Developer
+        status: rejected
+    UpdateajobRequest:
+      title: Update a job Request
+      required:
+        - company
+        - position
+        - status
+      type: object
+      properties:
+        company:
+          type: string
+        position:
+          type: string
+        status:
+          type: string
+      example:
+        company: Netlify
+        position: Front-end Developer
+        status: interview
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+security: []
+tags:
+  - name: Auth
+    description: ''
+  - name: Jobs
+    description: ''
